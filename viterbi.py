@@ -65,8 +65,10 @@ class viterbi():
             v.append(state_p)
             hidden_state.append(max_state)
 
+        observations_p=sum(v[-1])
         self.print_table(v)
         print(hidden_state)
+        print("观测序列概率："+str('%.5f'%observations_p))
 
     def print_table(self,v):
         table = PrettyTable()
@@ -76,5 +78,5 @@ class viterbi():
         print(table)
 
 if __name__ == "__main__":
-    v=viterbi(("walk","clean","walk","shop","walk"))
+    v=viterbi(("walk","clean","walk"))
     v.poccess()
