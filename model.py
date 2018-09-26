@@ -41,3 +41,30 @@ class Model():
             emission_probability[states[i]] = d
 
         return observations,states,start_probability,transition_probability,emission_probability
+
+    def build_model(self,observations,states,start_probability,transition_probability,emission_probability):
+        f = open("model.txt", 'w')
+        f.write(" ".join(observations) + "\n")
+        f.write(" ".join(states) + "\n")
+
+        f.write(str(start_probability[0]))
+        for p in start_probability[1:]:
+            f.write(" " + str(p))
+        f.write("\n")
+
+        f.write(str(transition_probability[0, 0]))
+        for p in transition_probability[0, 1:]:
+            f.write(" " + str(p))
+        for p_line in transition_probability[1:]:
+            f.write("," + str(p_line[0]))
+            for p in p_line[1:]:
+                f.write(" " + str(p))
+        f.write("\n")
+
+        f.write(str(emission_probability[0, 0]))
+        for p in emission_probability[0, 1:]:
+            f.write(" " + str(p))
+        for p_line in emission_probability[1:]:
+            f.write("," + str(p_line[0]))
+            for p in p_line[1:]:
+                f.write(" " + str(p))

@@ -66,4 +66,4 @@ class Viterbi():
 
 if __name__ == "__main__":
     v=Viterbi()
-    v.poccess("walk","clean","walk")
+    v.poccess("i","want","four","month","to","chicago")
