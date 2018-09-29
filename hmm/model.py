@@ -5,8 +5,8 @@ Created on 2018-09-23 19:58:47
 Author: Xiong Zecheng (295322781@qq.com)
 """
 class Model():
-    def load_model(self):
-        f = open("model.txt", "r")
+    def load_model(self,path):
+        f = open(path, "r")
         str_ob = f.readline().strip()
         str_st = f.readline().strip()
         str_sp = f.readline().strip()
@@ -42,8 +42,8 @@ class Model():
 
         return observations,states,start_probability,transition_probability,emission_probability
 
-    def build_model(self,observations,states,start_probability,transition_probability,emission_probability):
-        f = open("model.txt", 'w')
+    def build_model(self,path,observations,states,start_probability,transition_probability,emission_probability):
+        f = open(path, 'w')
         f.write(" ".join(observations) + "\n")
         f.write(" ".join(states) + "\n")
 
@@ -68,3 +68,17 @@ class Model():
             f.write("," + str(p_line[0]))
             for p in p_line[1:]:
                 f.write(" " + str(p))
+
+if __name__ == "__main__":
+    m = Model()
+    model = m.load_model("model.txt")
+    d = dict()
+    for key in model[3]:
+        dd = dict()
+        for inkey in model[3][key]:
+            if model[3][key][inkey]!=0:
+                dd[inkey]=model[3][key][inkey]
+        d[key]=dd
+    for key in d:
+        print(key+":",end="")
+        print(d[key])

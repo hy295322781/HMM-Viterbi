@@ -5,19 +5,19 @@ Created on 2018-09-14 10:12:16
 Author: Xiong Zecheng (295322781@qq.com)
 """
 from prettytable import PrettyTable
-from model import Model
+from hmm.model import Model
 
 class Viterbi():
-    def __init__(self):
+    def __init__(self,modelpath):
         m = Model()
         self.observations,\
         self.states,\
         self.start_probability,\
         self.transition_probability,\
-        self.emission_probability = m.load_model()
+        self.emission_probability = m.load_model(modelpath)
 
     # 维特比算法 obs_seq-观测序列
-    def poccess(self,*observations):
+    def poccess(self,observations):
         # 隐状态序列
         hidden_state = list()
         # 路径概率表
@@ -33,6 +33,12 @@ class Viterbi():
             if p > start_max:
                 start_max = p
                 max_start_state = state
+        if start_max==0:
+            default_max = -1
+            for state in self.states:
+                if self.start_probability[state] > default_max:
+                    default_max = self.start_probability[state]
+                    max_start_state = state
         v.append(start_p)
         hidden_state.append(max_start_state)
 
@@ -49,13 +55,20 @@ class Viterbi():
                 if p > max:
                     max = p
                     max_state = state
+            if max == 0:
+                default_max = -1
+                for state in self.states:
+                    transited_p = 0
+                    for i in range(len(self.states)):
+                        transited_p += v[-1][i] * self.transition_probability[self.states[i]][state]
+                    if transited_p > default_max:
+                        default_max = transited_p
+                        max_state = state
             v.append(state_p)
             hidden_state.append(max_state)
 
-        observations_p=sum(v[-1])
-        self.print_table(v)
-        print(hidden_state)
-        print("观测序列概率："+str('%.5f'%observations_p))
+        # self.print_table(v)
+        return hidden_state
 
     def print_table(self,v):
         table = PrettyTable()
@@ -65,5 +78,5 @@ class Viterbi():
         print(table)
 
 if __name__ == "__main__":
-    v=Viterbi()
-    v.poccess("i","want","four","month","to","chicago")
+    v=Viterbi("hmm/model.txt")
+    print(v.poccess(["i","want","four","month","to","chicago"]))
